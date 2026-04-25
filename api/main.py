@@ -18,7 +18,11 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup():
-    init_db()
+    try:
+        init_db()
+        print("[OK] DB inicializada")
+    except Exception as e:
+        print(f"[WARNING] DB init fallida: {e}")
 
 
 @app.get("/")
@@ -28,7 +32,13 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    try:
+        from db.database import get_conn
+        with get_conn() as conn:
+            conn.cursor().execute("SELECT 1")
+        return {"status": "ok", "db": "connected"}
+    except Exception as e:
+        return {"status": "ok", "db": f"error: {e}"}
 
 
 @app.get("/productos")
