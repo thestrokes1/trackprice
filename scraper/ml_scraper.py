@@ -42,11 +42,11 @@ def scrape_producto(url: str) -> dict | None:
     return {"nombre": nombre, "precio": precio, "url": url}
 
 
-def registrar(url: str):
+def registrar(url: str) -> bool:
     init_db()
     resultado = scrape_producto(url)
     if not resultado:
-        return
+        raise RuntimeError(f"Scraping fallido para {url} — precio no encontrado")
 
     producto_id = get_or_create_producto(resultado["nombre"], resultado["url"])
     guardar_precio(producto_id, resultado["precio"])
