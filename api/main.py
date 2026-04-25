@@ -41,6 +41,20 @@ def health():
         return {"status": "ok", "db": f"error: {e}"}
 
 
+@app.get("/debug")
+def debug():
+    from db.database import get_conn
+    with get_conn() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM productos")
+        prod_count = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM precios")
+        price_count = cur.fetchone()[0]
+        cur.execute("SELECT id, nombre FROM productos LIMIT 5")
+        prods = cur.fetchall()
+    return {"productos": prod_count, "precios": price_count, "muestra": prods}
+
+
 @app.get("/productos")
 def get_productos():
     rows = listar_productos()
