@@ -26,11 +26,12 @@ def correr_todos():
 
 
 if __name__ == "__main__":
-    print(f"Scheduler iniciado. Intervalo: cada {INTERVALO_HORAS} horas.")
-    correr_todos()  # correr inmediatamente al arrancar
-
-    schedule.every(INTERVALO_HORAS).hours.do(correr_todos)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(60)
+    if "--once" in sys.argv:
+        correr_todos()
+    else:
+        print(f"Scheduler iniciado. Intervalo: cada {INTERVALO_HORAS} horas.")
+        correr_todos()
+        schedule.every(INTERVALO_HORAS).hours.do(correr_todos)
+        while True:
+            schedule.run_pending()
+            time.sleep(60)
