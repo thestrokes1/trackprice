@@ -4,9 +4,9 @@
 ---
 
 ## ESTADO GENERAL
-**Fase actual:** 1 — Scraper local  
-**Último paso completado:** Primera corrida exitosa — datos guardados en SQLite  
-**Próximo paso:** scheduler/runner.py — ejecución automática cada X horas
+**Fase actual:** 3 — Deploy completado + DB poblada  
+**Último paso completado:** DB de Render poblada con datos reales via scraper local  
+**Próximo paso:** Dashboard web (D) para portfolio
 
 ---
 
@@ -31,9 +31,14 @@
 ## NOTAS TÉCNICAS
 
 - Deploy: Render (no Railway — free tier activo)
-- ML devuelve contenido estático correctamente con requests+BS4 para URLs tipo `/p/MLAXXX`
-- Selector de precio: `span.andes-money-amount__fraction` — funciona a 2026-04-24
-- Para obtener URL válida de producto usar formato: `https://www.mercadolibre.com.ar/<slug>/p/<MLAID>`
+- ML bloquea requests desde EEUU (403) — scraping HTML solo funciona desde IPs argentinas
+- Scraper corre localmente y guarda en DB de Render vía External URL
+- ML API pública `/products/{id}` requiere OAuth — `/items/{id}` retorna 403 desde EEUU
+- Selector de precio: `span.andes-money-amount__fraction` — funciona a 2026-04-25
+- External DB URL habilitada para IP 45.237.222.17 (Cristian home)
+- GitHub Actions workflow listo en .github/workflows/scrape.yml (falta setear secrets API_URL y SCRAPE_API_KEY)
+- POST /scrape con header x-api-key: trackprice-secret-2026 triggereal scraper en Render (no funciona por geo-block)
+- GET /debug muestra conteos de productos/precios en DB
 
 ---
 
